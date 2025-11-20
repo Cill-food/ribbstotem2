@@ -1,0 +1,1462 @@
+:root {
+  --preto: #000;
+  --branco: #f2f2f2;
+  --cinza: #b3b3b3;
+  --cinza-claro: #f8f9fa;
+  --amarelo: #ffd500;
+  --vermelho: #ff0000;
+  --accent: #ff4500;
+  --verde: #28a745;
+  --sombra-modal: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #000;
+  color: #fff;
+  overflow-x: hidden;
+  background-image: url("./img/fundo.png");
+  background-size: cover;
+  background-attachment: fixed;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/* ====================== LAYOUT BASE ====================== */
+.start-screen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.6s;
+}
+.start-screen img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+.start-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 2px solid var(--amarelo);
+}
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+#statusOnline {
+  color: #00ff00;
+  text-shadow: 0 0 10px #00ff00;
+}
+
+/* Novo estilo para o carrinho no header */
+#headerCart {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+#toggleCartHeader {
+  background: var(--amarelo);
+  color: black;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+#cartCount {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--vermelho);
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+#headerCartDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: rgba(0, 0, 0, 0.95);
+  border: 2px solid var(--amarelo);
+  border-radius: 12px;
+  padding: 16px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+}
+
+#headerCartDropdown.show {
+  display: block;
+}
+
+#cartItemsHeader p {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed #555;
+}
+
+.removeBtn {
+  background: var(--vermelho);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.header-cart-total {
+  text-align: right;
+  font-weight: bold;
+  margin: 10px 0;
+  color: var(--amarelo);
+}
+
+.header-cart-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.header-cart-buttons button {
+  background: var(--amarelo);
+  color: black;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.header-cart-buttons button:hover {
+  background: #ffed4e;
+  transform: scale(1.04);
+}
+
+.sessao-topo {
+  display: flex;
+  gap: 12px;
+  padding: 12px 20px;
+  overflow-x: auto;
+  background: rgba(20, 20, 20, 0.95);
+  scrollbar-width: none;
+}
+.sessao-topo::-webkit-scrollbar {
+  display: none;
+}
+.sessao-topo button {
+  padding: 10px 20px;
+  background: transparent;
+  border: 2px solid #555;
+  color: #ccc;
+  border-radius: 30px;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+.sessao-topo button.active,
+.sessao-topo button:hover {
+  background: var(--amarelo);
+  color: black;
+  border-color: var(--amarelo);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+/* ====================== CARDÁPIO ====================== */
+#cardapio {
+  flex: 1;
+  padding: 20px;
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 140px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+
+.card {
+  background: linear-gradient(135deg, #1a1a1a, #111);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  transition: all 0.4s ease;
+  /* Considere aumentar o font-size para melhor leitura, ex: 0.8rem */
+  font-size: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 250px;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(255, 215, 0, 0.25);
+  border-color: var(--amarelo);
+}
+.card img {
+  width: 100%;
+  /* Reduza este valor para diminuir a altura do card */
+  height: 150px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.4s;
+}
+.card img:hover {
+  transform: scale(1.06);
+}
+
+.card p {
+  word-wrap: break-word;
+  font-size: 0.8rem; /* Exemplo de aumento da fonte do parágrafo */
+  padding: 0 10px; /* Adicione um pequeno padding para não grudar nas laterais */
+}
+
+.card h3 {
+  padding: 7px 12px 6px;
+  font-size: 15px;
+  color: var(--amarelo);
+}
+
+.card .descricao {
+  padding: 0 11px 11px;
+  font-size: 12px;
+  color: #ddd;
+}
+
+.options-row {
+  padding: 0 9px 9px;
+  display: center;
+  flex-direction: column;
+  gap: 12px;
+}
+.small-option {
+  display: center;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 215, 0, 0.12);
+  padding: 5px 8px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+.small-option p:first-child {
+  color: var(--amarelo);
+}
+
+.btn {
+  background: var(--amarelo);
+  color: black;
+  border: none;
+  padding: 8px 9px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+.btn:hover {
+  background: #ffed4e;
+  transform: scale(1.04);
+}
+
+/* ====================== MODAL PERSONALIZAÇÃO - NOVO LAYOUT LADO A LADO ====================== */
+#popupCustom {
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  background: #111;
+  border-radius: 12px;
+  padding: 18px;
+  border: 3px solid var(--amarelo);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#popupCustomTitle {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--amarelo);
+  margin-bottom: 20px;
+}
+
+/* Layout horizontal: duas colunas */
+.custom-columns {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  flex: 1;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.custom-columns .column {
+  flex: 1;
+  min-width: 0;
+  background: rgba(30, 30, 30, 0.7);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.column h4 {
+  color: var(--amarelo);
+  font-size: 19px;
+  margin: 0 0 16px 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Scroll independente em cada coluna */
+.veggie-options,
+.extra-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.veggie-options::-webkit-scrollbar,
+.extra-options::-webkit-scrollbar {
+  width: 8px;
+}
+.veggie-options::-webkit-scrollbar-thumb,
+.extra-options::-webkit-scrollbar-thumb {
+  background: var(--amarelo);
+  border-radius: 4px;
+}
+
+/* Ingredientes inclusos */
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 14px 16px;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+.checkbox-item:hover {
+  background: rgba(255, 215, 0, 0.15);
+}
+.checkbox-item input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  accent-color: var(--amarelo);
+  cursor: pointer;
+}
+.checkbox-item span {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+/* Adicionais pagos */
+.extra-option {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 14px 16px;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+}
+.nome-extra {
+  font-weight: 600;
+  font-size: 16px;
+}
+.preco-extra {
+  color: var(--verde);
+  font-weight: bold;
+}
+
+.extra-counter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 6px 12px;
+  border-radius: 30px;
+}
+.extra-counter button {
+  width: 38px;
+  height: 38px;
+  background: var(--amarelo);
+  color: black;
+  border: none;
+  border-radius: 50%;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.extra-counter button:hover {
+  background: #ffed4e;
+  transform: scale(1.1);
+}
+.extra-counter span {
+  min-width: 40px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--amarelo);
+}
+
+/* Total + Botão centralizados abaixo */
+#popupResumo {
+  text-align: center;
+  padding-top: 16px;
+  border-top: 2px dashed rgba(255, 215, 0, 0.4);
+  flex-shrink: 0;
+}
+
+#totalExtra {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 8px 0;
+  color: #ccc;
+}
+
+#totalItem {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--verde);
+  margin: 12px 0;
+}
+
+#confirmCustomBtn {
+  min-width: 280px;
+  padding: 18px 0;
+  font-size: 20px;
+  font-weight: 900;
+  margin-top: 10px;
+}
+
+/* ====================== OUTROS POPUPS ====================== */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(10px);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+.backdrop.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: #111;
+  border-radius: 20px;
+  padding: 28px;
+  width: 90%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s ease;
+  border: 2px solid var(--amarelo);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+}
+.popup.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Estilos para o modal de Milk Shake */
+
+/* Geral do modal */
+#popupMilkShake {
+  background: linear-gradient(135deg, #1a1a1a, #111); /* Gradiente premium */
+  border: 3px solid var(--amarelo); /* Borda amarela */
+  box-shadow: var(--sombra-modal);
+  padding: 24px;
+  max-width: 500px; /* Adequado para 1024x768 */
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Título */
+#popupMilkShake h3 {
+  font-size: 24px;
+  color: var(--amarelo);
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Seção de opções */
+.milkshake-options h4 {
+  font-size: 18px;
+  color: var(--branco);
+  margin-bottom: 12px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Grupo de radios */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Item de radio */
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05); /* Fundo sutil */
+  padding: 14px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--cinza);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.radio-item:hover {
+  background: rgba(255, 215, 0, 0.1);
+  border-color: var(--amarelo);
+  transform: translateY(-2px);
+}
+
+.radio-item input[type="radio"] {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: #222;
+  border: 2px solid var(--amarelo);
+  border-radius: 50%; /* Circular para radio */
+  position: relative;
+  transition: all 0.3s;
+}
+
+.radio-item input[type="radio"]:checked {
+  background: var(--amarelo);
+}
+
+.radio-item input[type="radio"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: var(--preto);
+  border-radius: 50%;
+}
+
+.radio-item span {
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Botão confirmar */
+#popupMilkShake .btn {
+  background: var(--verde);
+  color: #fff;
+  font-size: 18px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  width: auto;
+  min-width: 200px;
+  transition: all 0.3s;
+  margin-top: 16px;
+}
+
+#popupMilkShake .btn:hover {
+  background: #32cd32;
+  transform: translateY(-2px);
+}
+
+/* Responsividade para 1024x768 */
+@media (max-width: 1024px) {
+  #popupMilkShake {
+    max-width: 90%;
+    padding: 20px;
+  }
+
+  #popupMilkShake h3 {
+    font-size: 22px;
+  }
+
+  .radio-item {
+    padding: 12px 16px;
+  }
+
+  .radio-item span {
+    font-size: 16px;
+  }
+
+  #popupMilkShake .btn {
+    font-size: 16px;
+    padding: 12px 20px;
+  }
+}
+
+/* ====================== FOOTER VAZIO ====================== */
+#footerCart {
+  position: fixed;
+  display: none;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(12px);
+  border-top: 3px solid var(--amarelo);
+  height: 20px; /* Altura mínima para a barra preta */
+  z-index: 998;
+}
+
+/* ====================== RESPONSIVO ====================== */
+@media (max-width: 1024px) {
+  #popupCustom {
+    width: 95%;
+    max-height: 95vh;
+    padding: 12px;
+  }
+
+  .custom-columns {
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+  }
+
+  .custom-columns .column {
+    min-width: auto;
+    padding: 12px;
+  }
+
+  #popupCustomTitle {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+
+  .checkbox-item span,
+  .nome-extra {
+    font-size: 15px;
+  }
+
+  #confirmCustomBtn {
+    min-width: 100%;
+    padding: 14px;
+    font-size: 18px;
+  }
+
+  #cardapio {
+    padding: 16px;
+    gap: 16px;
+    padding-bottom: 100px;
+  }
+
+  .card h3 {
+    font-size: 14px;
+  }
+
+  .card .descricao {
+    font-size: 13px;
+  }
+
+  .btn {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  #popupCustom {
+    padding: 10px;
+  }
+
+  .custom-columns {
+    gap: 10px;
+  }
+
+  .column h4 {
+    font-size: 17px;
+  }
+
+  .checkbox-item {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .checkbox-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  .checkbox-item span {
+    font-size: 15px;
+  }
+
+  .extra-option {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .extra-counter button {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+
+  .extra-counter span {
+    min-width: 30px;
+    font-size: 16px;
+  }
+
+  #totalItem {
+    font-size: 24px;
+  }
+
+  #confirmCustomBtn {
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .sessao-topo {
+    gap: 8px;
+    padding: 8px 16px;
+  }
+
+  .sessao-topo button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  #cardapio {
+    flex-wrap: wrap;
+    padding: 12px;
+    gap: 12px;
+    padding-bottom: 80px;
+  }
+
+  .card {
+    width: 100%;
+  }
+
+  #popupCustom {
+    padding: 8px;
+  }
+
+  #popupCustomTitle {
+    font-size: 20px;
+  }
+
+  .checkbox-item span,
+  .nome-extra {
+    font-size: 14px;
+  }
+
+  .extra-counter button {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+}
+
+/* Adicione estes estilos ao final do seu style.css para estilizar o modal de pagamentos */
+
+/* Estilos gerais para o modal de pagamento */
+#popupPayment {
+  background: linear-gradient(
+    135deg,
+    #1a1a1a,
+    #111
+  ); /* Gradiente escuro para um visual premium */
+  border: 3px solid var(--amarelo); /* Borda amarela destacada */
+  box-shadow: var(--sombra-modal);
+  padding: 24px; /* Mais espaço interno */
+  max-width: 600px; /* Aumenta a largura para melhor visualização em 1024x768 */
+  border-radius: 16px; /* Bordas mais arredondadas */
+}
+
+/* Título do modal */
+#popupPayment h3 {
+  font-size: 24px;
+  color: var(--amarelo);
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra no texto para destaque */
+}
+
+/* Métodos de pagamento */
+.pay-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Espaçamento maior entre botões */
+}
+
+/* Botões de pagamento */
+.pay-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Espaço entre ícone e texto */
+  padding: 16px 20px; /* Padding maior para botões mais clicáveis em touch */
+  background: rgba(255, 255, 255, 0.1); /* Fundo semi-transparente */
+  border: 2px solid var(--cinza); /* Borda cinza inicial */
+  border-radius: 12px; /* Bordas arredondadas */
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Transição suave */
+}
+
+.pay-btn:hover {
+  background: rgba(255, 215, 0, 0.2); /* Fundo amarelo claro no hover */
+  border-color: var(--amarelo); /* Borda amarela no hover */
+  transform: translateY(-2px); /* Efeito de elevação */
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3); /* Sombra amarela */
+}
+
+/* Ícones nos botões */
+.pay-btn svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* Botão específico para PIX */
+.pay-pix {
+  background: rgba(0, 255, 0, 0.1); /* Verde claro para PIX */
+}
+
+.pay-pix:hover {
+  background: rgba(0, 255, 0, 0.2);
+  border-color: #00ff00; /* Verde no hover */
+}
+
+/* Botão para Cartão */
+.pay-card {
+  background: rgba(0, 0, 255, 0.1); /* Azul claro para cartão */
+}
+
+.pay-card:hover {
+  background: rgba(0, 0, 255, 0.2);
+  border-color: #0000ff; /* Azul no hover */
+}
+
+/* Botão para Dinheiro */
+.pay-cash {
+  background: rgba(255, 165, 0, 0.1); /* Laranja claro para dinheiro */
+}
+
+.pay-cash:hover {
+  background: rgba(255, 165, 0, 0.2);
+  border-color: #ffa500; /* Laranja no hover */
+}
+
+/* Botão de dividir pagamento */
+#popupPayment .btn {
+  margin-top: 16px;
+  background: var(--verde); /* Verde para ação principal */
+  color: #fff;
+  font-size: 18px;
+  padding: 14px;
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+#popupPayment .btn:hover {
+  background: #32cd32; /* Verde mais claro no hover */
+  transform: translateY(-2px);
+}
+
+/* Seção de divisão de pagamento */
+#splitPaymentSection {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05); /* Fundo sutil */
+  border-radius: 12px;
+  border: 1px solid var(--cinza);
+}
+
+#splitPaymentSection h4 {
+  color: var(--amarelo);
+  margin-bottom: 12px;
+}
+
+#splitPaymentSection label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+#splitPaymentSection select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid var(--amarelo);
+  background: #222;
+  color: #fff;
+  font-size: 16px;
+}
+
+#splitPaymentInputs {
+  margin-top: 12px;
+}
+
+#splitTotal,
+#splitError {
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+#confirmSplitBtn {
+  width: 100%;
+  margin-top: 16px;
+  background: var(--amarelo);
+  color: black;
+}
+
+/* Responsividade para 1024x768 (touch monitor) */
+@media (max-width: 1024px) {
+  #popupPayment {
+    max-width: 90%;
+    padding: 20px;
+  }
+
+  .pay-btn {
+    padding: 14px 18px;
+    font-size: 16px;
+  }
+
+  #popupPayment h3 {
+    font-size: 22px;
+  }
+
+  #splitPaymentSection select {
+    font-size: 15px;
+  }
+}
+
+/* Estilos para o QR Code PIX no modal de pagamento */
+
+/* Contêiner do QR Code (adicione uma div ao redor da img se necessário) */
+.qr-code-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  padding: 16px;
+  background: #f9f9f9; /* Fundo claro para contraste */
+  border-radius: 16px; /* Bordas arredondadas suaves */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra sutil para destaque */
+  max-width: 320px; /* Limita a largura para telas menores */
+  transition: all 0.3s ease; /* Transição suave para interações */
+}
+
+.qr-code-container:hover {
+  box-shadow: 0 6px 18px rgba(40, 167, 69, 0.3); /* Sombra verde (cor do PIX) no hover */
+  transform: scale(1.02); /* Leve zoom no hover para touch feedback */
+}
+
+/* Estilo da imagem do QR Code */
+#qr-code-pix {
+  width: 100%; /* Responsivo: ocupa todo o contêiner */
+  max-width: 280px; /* Tamanho máximo para 1024x768 */
+  height: auto; /* Mantém proporção */
+  object-fit: contain; /* Garante que o QR caiba sem distorção */
+  border: 2px solid var(--verde); /* Borda verde (cor do PIX) */
+  border-radius: 12px; /* Bordas arredondadas na imagem */
+}
+
+/* Texto explicativo abaixo do QR (opcional, adicione um <p> abaixo da img) */
+.qr-instructions {
+  text-align: center;
+  font-size: 16px;
+  color: #333; /* Cor escura para legibilidade no fundo claro */
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+/* Responsividade para monitor touch 1024x768 */
+@media (max-width: 1024px) {
+  .qr-code-container {
+    max-width: 280px; /* Ajusta para caber bem na tela */
+    padding: 12px;
+  }
+
+  #qr-code-pix {
+    max-width: 240px; /* Reduz ligeiramente para mobile/touch */
+  }
+
+  .qr-instructions {
+    font-size: 14px;
+  }
+}
+
+/* Animação opcional para chamar atenção (pulse) */
+@keyframes qr-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.qr-code-container.animate {
+  animation: qr-pulse 2s infinite ease-in-out;
+}
+
+/* Estilos profissionais para o modal de Nome do Cliente */
+#popupNome {
+  background: linear-gradient(
+    135deg,
+    #1a1a1a,
+    #111
+  ); /* Gradiente escuro premium */
+  border: 3px solid var(--amarelo); /* Borda amarela destacada */
+  box-shadow: var(--sombra-modal);
+  padding: 24px; /* Espaço interno confortável */
+  max-width: 600px; /* Largura adequada para 1024x768 */
+  border-radius: 16px; /* Bordas arredondadas */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza conteúdo */
+}
+
+/* Título do modal de Nome */
+#popupNome h3 {
+  font-size: 24px;
+  color: var(--amarelo);
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra no texto */
+}
+
+/* Input de Nome */
+#inputNome {
+  width: 100%;
+  max-width: 400px;
+  padding: 14px;
+  font-size: 20px;
+  background: #222; /* Fundo escuro */
+  color: #fff;
+  border: 2px solid var(--amarelo); /* Borda amarela */
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  outline: none; /* Remove foco padrão */
+}
+
+/* Teclado de Nome */
+#keyboard {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr); /* Layout de teclado profissional */
+  gap: 8px;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+#keyboard button {
+  background: var(--preto); /* Background preto */
+  color: var(--branco); /* Letras brancas */
+  border: 2px solid var(--amarelo); /* Ao redor amarelo */
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  touch-action: manipulation; /* Otimiza para touch */
+}
+
+#keyboard button:hover,
+#keyboard button:active {
+  background: var(--amarelo); /* Amarelo no hover/click */
+  color: var(--preto);
+  transform: scale(1.05); /* Feedback visual */
+}
+
+#keyboard button.space {
+  grid-column: span 5; /* Botão de espaço maior */
+}
+
+#keyboard button.backspace {
+  grid-column: span 2; /* Botão de backspace maior */
+  background: var(--vermelho); /* Vermelho para deletar */
+  color: #fff;
+  border-color: var(--vermelho);
+}
+
+#keyboard button.backspace:hover {
+  background: #ff3333;
+  color: #fff;
+}
+
+/* Botão Confirmar no modal de Nome */
+#popupNome .btn {
+  background: var(--verde); /* Verde para confirmação */
+  color: #fff;
+  font-size: 18px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  width: auto;
+  min-width: 200px;
+  transition: all 0.3s;
+}
+
+#popupNome .btn:hover {
+  background: #32cd32;
+  transform: translateY(-2px);
+}
+
+/* Estilos profissionais para o modal de Troco */
+#popupTroco {
+  background: linear-gradient(135deg, #1a1a1a, #111);
+  border: 3px solid var(--amarelo);
+  box-shadow: var(--sombra-modal);
+  padding: 24px;
+  max-width: 600px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Título do modal de Troco */
+#popupTroco h3 {
+  font-size: 24px;
+  color: var(--amarelo);
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Input de Troco */
+#inputTroco {
+  width: 100%;
+  max-width: 400px;
+  padding: 14px;
+  font-size: 20px;
+  background: #222;
+  color: #fff;
+  border: 2px solid var(--amarelo);
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  outline: none;
+}
+
+/* Teclado de Troco */
+#trocoKeyboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Layout numérico como calculadora */
+  gap: 8px;
+  width: 100%;
+  max-width: 300px; /* Mais compacto para números */
+  margin-bottom: 20px;
+}
+
+#trocoKeyboard button {
+  background: var(--preto); /* Background preto */
+  color: var(--branco); /* Letras brancas */
+  border: 2px solid var(--amarelo); /* Ao redor amarelo */
+  border-radius: 8px;
+  font-size: 24px; /* Fontes maiores para touch */
+  font-weight: bold;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#trocoKeyboard button:hover,
+#trocoKeyboard button:active {
+  background: var(--amarelo);
+  color: var(--preto);
+  transform: scale(1.05);
+}
+
+#trocoKeyboard button[data-key="⌫"] {
+  background: var(--vermelho);
+  color: #fff;
+  border-color: var(--vermelho);
+  grid-column: span 1; /* Tamanho normal */
+}
+
+#trocoKeyboard button[data-key="⌫"]:hover {
+  background: #ff3333;
+  color: #fff;
+}
+
+#trocoKeyboard button[data-key="0"] {
+  grid-column: span 1; /* Ajuste se necessário */
+}
+
+#trocoKeyboard button[data-key="."] {
+  grid-column: span 1;
+}
+
+/* Botão Confirmar no modal de Troco */
+#popupTroco .btn {
+  background: var(--verde);
+  color: #fff;
+  font-size: 18px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  width: auto;
+  min-width: 200px;
+  transition: all 0.3s;
+}
+
+#popupTroco .btn:hover {
+  background: #32cd32;
+  transform: translateY(-2px);
+}
+
+/* Responsividade para touch monitor 1024x768 */
+@media (max-width: 1024px) {
+  #popupNome,
+  #popupTroco {
+    max-width: 90%;
+    padding: 20px;
+  }
+
+  #keyboard {
+    grid-template-columns: repeat(8, 1fr); /* Ajuste para telas menores */
+    gap: 6px;
+  }
+
+  #trocoKeyboard {
+    max-width: 280px;
+    gap: 6px;
+  }
+
+  #keyboard button,
+  #trocoKeyboard button {
+    padding: 12px;
+    font-size: 20px;
+  }
+
+  #popupNome h3,
+  #popupTroco h3 {
+    font-size: 22px;
+  }
+
+  #inputNome,
+  #inputTroco {
+    font-size: 18px;
+    padding: 12px;
+  }
+}
+
+/* Estilos totais para o modal de "Personalize sua Batata G" (usando #popupCustom) */
+#popupCustom.batata-g {
+  /* Adicione class 'batata-g' via JS se necessário, ou use seletores baseados em conteúdo */
+  background: linear-gradient(135deg, #1a1a1a, #111); /* Gradiente premium */
+  border: 3px solid var(--amarelo); /* Borda amarela destacada */
+  box-shadow: var(--sombra-modal);
+  padding: 24px; /* Espaço interno */
+  max-width: 600px; /* Largura para 1024x768 */
+  border-radius: 16px; /* Bordas arredondadas */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza para simplicidade */
+  overflow-y: auto; /* Scroll se necessário */
+}
+
+/* Título específico para Batata G */
+#popupCustomTitle {
+  font-size: 24px;
+  color: var(--amarelo);
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra no texto */
+  font-weight: bold;
+}
+
+/* Área de opções (veggie-options para Batata G) */
+#popupQuestion .veggie-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Espaço entre checkboxes */
+  width: 100%;
+  max-width: 400px; /* Centralizado e compacto */
+  margin-bottom: 24px;
+}
+
+/* Checkbox items para Batata G */
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05); /* Fundo sutil */
+  padding: 14px 20px; /* Padding confortável para touch */
+  border-radius: 12px; /* Bordas arredondadas */
+  border: 1px solid var(--cinza); /* Borda leve */
+  transition: all 0.3s ease;
+  cursor: pointer; /* Indica clicável */
+}
+
+.checkbox-item:hover {
+  background: rgba(255, 215, 0, 0.1); /* Amarelo claro no hover */
+  border-color: var(--amarelo); /* Borda amarela no hover */
+  transform: translateY(-2px); /* Elevação */
+}
+
+.checkbox-item input[type="checkbox"] {
+  appearance: none; /* Remove estilo padrão */
+  width: 24px;
+  height: 24px;
+  background: #222; /* Fundo escuro unchecked */
+  border: 2px solid var(--amarelo); /* Borda amarela */
+  border-radius: 6px; /* Arredondado */
+  position: relative;
+  transition: all 0.3s;
+}
+
+.checkbox-item input[type="checkbox"]:checked {
+  background: var(--amarelo); /* Amarelo quando checked */
+}
+
+.checkbox-item input[type="checkbox"]:checked::after {
+  content: "✔"; /* Ícone de check */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--preto);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.checkbox-item span {
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Área de resumo (total e botão) */
+#popupResumo {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05); /* Fundo sutil */
+  border-radius: 12px;
+  border: 1px solid var(--cinza);
+  margin-top: 20px;
+}
+
+#totalItem {
+  font-size: 28px;
+  color: var(--verde);
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+/* Botão Adicionar ao Carrinho */
+#confirmCustomBtn {
+  background: var(--verde); /* Verde para ação positiva */
+  color: #fff;
+  font-size: 20px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  width: 100%;
+  font-weight: bold;
+  transition: all 0.3s;
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3); /* Sombra verde */
+}
+
+#confirmCustomBtn:hover {
+  background: #32cd32; /* Verde mais claro */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+}
+
+/* Responsividade para 1024x768 */
+@media (max-width: 1024px) {
+  #popupCustom {
+    max-width: 90%;
+    padding: 20px;
+  }
+
+  #popupCustomTitle {
+    font-size: 22px;
+  }
+
+  .checkbox-item {
+    padding: 12px 16px;
+  }
+
+  .checkbox-item span {
+    font-size: 16px;
+  }
+
+  #confirmCustomBtn {
+    font-size: 18px;
+    padding: 14px 20px;
+  }
+}
