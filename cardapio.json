@@ -1,8 +1,8 @@
 {
-  "Promoções": [
+  "Promocoes": [
     {
       "nome": "Batata G",
-      "descricao": "Batata G,Cheddar,Bacon, crocância e sabor inconfundível.",
+      "descricao": "Batata G, Cheddar, Bacon, crocância e sabor inconfundível.",
       "precoBase": [16],
       "opcoes": ["Promo"],
       "img": "./img/batatag.png",
@@ -138,7 +138,7 @@
     },
     {
       "nome": "Combo Plus!",
-      "descricao": "Compõe 4 smash duplos, junto a Batata G com cheddar e bacon!.",
+      "descricao": "Compõe 4 smash duplos, junto a Batata G com cheddar e bacon!",
       "precoBase": [75],
       "opcoes": ["Promo"],
       "img": "./img/comboplus.png",
@@ -323,7 +323,7 @@
   "Batata Frita": [
     {
       "nome": "Batata",
-      "opcoes": ["Pequena", "Média", "Grande"],
+      "opcoes": ["Pequena", "Media", "Grande"],
       "precoBase": [8, 12, 16],
       "img": "./img/batata.png",
       "adicionais": [
@@ -340,7 +340,7 @@
       "img": "./img/coca.png"
     },
     {
-      "nome": "Antártica",
+      "nome": "Antarctica",
       "opcoes": ["Lata", "Litro"],
       "precoBase": [5, 8],
       "img": "./img/antartica.png"
@@ -372,7 +372,7 @@
       "img": "./img/milks.png"
     },
     {
-      "nome": "Paçoca",
+      "nome": "Pacoca",
       "opcoes": ["300ml", "400ml"],
       "precoBase": [10, 12],
       "img": "./img/milks.png"
@@ -411,8 +411,8 @@
       ]
     },
     {
-      "nome": "Combo Duplo + Batata Média",
-      "descricao": "Smash Duplo com Batata Média, perfeito para compartilhar.",
+      "nome": "Combo Duplo + Batata Media",
+      "descricao": "Smash Duplo com Batata Media, perfeito para compartilhar.",
       "precoBase": [28],
       "opcoes": ["Promo"],
       "img": "./img/duplobatata.png",
