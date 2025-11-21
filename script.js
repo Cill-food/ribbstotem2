@@ -1160,7 +1160,7 @@ document.getElementById("backdrop").addEventListener("click", () => {
 // === MILK SHAKE ===
 function openMilkShakeModal(item) {
   openPopup("popupMilkShake");
-  currentItem = item; // Salva o item atual
+  // Removed currentItem = item; to avoid overwriting
 }
 
 function confirmMilkShake() {
@@ -1170,8 +1170,11 @@ function confirmMilkShake() {
     return;
   }
 
-  const nomeFinal = item.nome + "\n- Cobertura: " + selected.value; // Como sub-item
-  cart.push({ item: nomeFinal, price: item.precoBase });
+  const item = cardapioData[currentItem.cat][currentItem.i];
+  const op = currentItem.op;
+  const size = item.opcoes[op];
+  const nomeFinal = `${item.nome} ${size}\n- Cobertura: ${selected.value}`;
+  cart.push({ item: nomeFinal, price: currentItem.precoBase });
   flyToCart();
   updateCart();
   playSound("soundAdd");
